@@ -1,0 +1,6 @@
+{
+  "txOperatorMnemonic": "",
+  "txOperatorMnemonicPw": "",
+  "nodeUrl": "http://213.239.193.208:9052",
+  "apiUrl": "https://tn-ergo-explorer.anetabtc.io"
+}
