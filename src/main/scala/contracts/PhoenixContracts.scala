@@ -56,7 +56,7 @@ object PhoenixContracts extends Enum[PhoenixContracts] {
   val values: immutable.IndexedSeq[PhoenixContracts] = findValues
   case object phoenix_v1_hodlcoin_bank extends BoxGuardScriptContract
   case object phoenix_v1_hodlcoin_fee extends BoxGuardScriptContract
-  case object phoenix_v1_hodlcoin_fee_test extends BoxGuardScriptContract
+  case object phoenix_v1_hodlcoin_feeTest extends BoxGuardScriptContract
   case object phoenix_v1_hodlcoin_proxy
       extends ProxyContractBoxGuardScriptContract
 }

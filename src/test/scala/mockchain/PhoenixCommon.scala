@@ -42,7 +42,7 @@ trait PhoenixCommon extends HttpClientTesting {
     Address.create("9eiuh5bJtw9oWDVcfJnwTm1EHfK5949MEm5DStc2sD1TLwDSrpx")
 
   val feeScript: String =
-    PhoenixContracts.phoenix_v1_hodlcoin_fee_test.contractScript
+    PhoenixContracts.phoenix_v1_hodlcoin_feeTest.contractScript
 
   val phoenixScript: String =
     PhoenixContracts.phoenix_v1_hodlcoin_bank.contractScript
