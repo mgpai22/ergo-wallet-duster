@@ -1001,4 +1001,80 @@ class ProxySpec
 
   }
 
+  "ProxyRefundWithMultipleInputsAndDifferentTokens" should "work correctly when all conditions are satisfied" in {
+
+    val ergMintAmount = 40L
+    // note that the buyer has to sign their own refund tx
+    val txHelper = new TransactionHelper(
+      ctx,
+      "pond trick believe salt obscure wool end state thing fringe reunion legend quarter popular oak",
+      ""
+    )
+    val userAddress = txHelper.senderAddress
+
+    val fundingBox = outBoxObj
+      .simpleOutBox(userAddress, recommendedMinerFee)
+      .convertToInputWith(fakeTxId1, fakeIndex)
+
+    val proxyInput = outBoxObj
+      .proxyBurnInputBox(
+        proxyContract,
+        userAddress,
+        hodlBankSingleton,
+        dummyHodlTokens,
+        minBoxValue,
+        minerFee,
+        ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
+      )
+      .convertToInputWith(fakeTxId1, fakeIndex)
+
+    val proxyInput2 = outBoxObj
+      .proxyBurnInputBox(
+        proxyContract,
+        userAddress,
+        hodlBankSingleton,
+        new ErgoToken(hodlTokenId, 47L),
+        minBoxValue,
+        minerFee,
+        100000L + minBoxValue + minerFee + minTxOperatorFee
+      )
+      .convertToInputWith(fakeTxId2, fakeIndex)
+
+    val proxyInput3 = outBoxObj
+      .proxyBurnInputBox(
+        proxyContract,
+        userAddress,
+        hodlBankSingleton,
+        new ErgoToken(dexyUSD, 52438924L),
+        minBoxValue,
+        minerFee,
+        10041514300L + minBoxValue + minerFee + minTxOperatorFee
+      )
+      .convertToInputWith(fakeTxId3, fakeIndex)
+
+    val inputs = Array(fundingBox, proxyInput, proxyInput2, proxyInput3)
+
+    val outputs = inputs.tail.map { i =>
+      val recipientBox = outBoxObj.optionalTokenOutBox(
+        i.getTokens.asScala,
+        userAddress,
+        i.getValue
+      )
+      recipientBox
+    }
+
+    val unsignedTransaction = txHelper.buildUnsignedTransaction(
+      inputs = inputs,
+      outputs = outputs,
+      fee = recommendedMinerFee
+    )
+
+    noException shouldBe thrownBy {
+      txHelper.signTransaction(
+        unsignedTransaction
+      )
+
+    }
+  }
+
 }
