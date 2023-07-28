@@ -1,6 +1,6 @@
 package mockchain
 
-import org.ergoplatform.appkit.{Address, OutBox}
+import org.ergoplatform.appkit.{Address, OutBox, Parameters}
 import mockClient.{Common, HttpClientTesting}
 import org.ergoplatform.sdk.ErgoToken
 import org.scalatest.flatspec.AnyFlatSpec
@@ -82,6 +82,169 @@ class ProxySpec
     val recipientBox = outBoxObj.hodlMintBox(
       userAddress,
       new ErgoToken(hodlTokenId, hodlMintAmount)
+    )
+
+    val unsignedTransaction = txHelper.buildUnsignedTransaction(
+      inputs = Array(hodlBox, proxyInput),
+      outputs = Array(hodlOutBox, recipientBox),
+      fee = minerFee
+    )
+
+    noException shouldBe thrownBy {
+      txHelper.signTransaction(
+        unsignedTransaction
+      )
+    }
+
+  }
+
+  "PhoenixMintOperationWithProxyWithBuggyDecimals" should "fail since amountHodlToMint goes to zero" in {
+
+    val ergAmount = 1009584710L
+    val hodlErgAmount = 97739923L
+
+    val hodlSingleton = new ErgoToken(hodlBankNft, 1L)
+    val hodlTokens = new ErgoToken(hodlTokenId, hodlErgAmount)
+
+    val totalTokenSupply = 97739924L
+    val precisionFactor = 1000000L
+    val minBankValue = 1000000L
+    val bankFeeNum = 3L
+    val devFeeNum = 1L
+
+    val minerFee = 1000000L
+    val minTxOperatorFee = 1000000L
+    val minBoxValue = 1000000L
+
+    val hodlBox = outBoxObj
+      .hodlBankBox(
+        phoenixContract,
+        hodlSingleton,
+        hodlTokens,
+        totalTokenSupply,
+        precisionFactor,
+        minBankValue,
+        bankFeeNum,
+        devFeeNum,
+        ergAmount
+      )
+      .convertToInputWith(fakeTxId1, fakeIndex)
+
+    val ergMintAmount = Parameters.OneErg
+
+    val proxyInput = outBoxObj
+      .proxyMintInputBox(
+        proxyContract,
+        userAddress,
+        hodlBankSingleton,
+        dummyHodlTokens,
+        minBoxValue,
+        minerFee,
+        ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
+      )
+      .convertToInputWith(fakeTxId1, fakeIndex)
+
+    val amountHodlToMint = hodlMintAmount(hodlBox, ergMintAmount)
+
+    println(amountHodlToMint)
+
+    val hodlOutBox = outBoxObj.hodlBankBox(
+      phoenixContract,
+      hodlSingleton,
+      new ErgoToken(hodlTokenId, hodlErgAmount - amountHodlToMint),
+      totalTokenSupply,
+      precisionFactor,
+      minBankValue,
+      bankFeeNum,
+      devFeeNum,
+      ergAmount + ergMintAmount
+    )
+
+    val recipientBox = outBoxObj.hodlMintBox(
+      userAddress,
+      new ErgoToken(hodlTokenId, amountHodlToMint)
+    )
+
+    a[IllegalArgumentException] shouldBe thrownBy {
+
+      val unsignedTransaction = txHelper.buildUnsignedTransaction(
+        inputs = Array(hodlBox, proxyInput),
+        outputs = Array(hodlOutBox, recipientBox),
+        fee = minerFee
+      )
+
+      txHelper.signTransaction(
+        unsignedTransaction
+      )
+    }
+
+  }
+
+  "PhoenixMintOperationWithProxyWithBuggyDecimals" should "work correctly when hodlTokens get decimals" in {
+
+    val ergAmount = 1009584710L
+    val hodlErgAmount = (97739923 * math.pow(10, 9)).toLong
+
+    val hodlSingleton = new ErgoToken(hodlBankNft, 1L)
+    val hodlTokens = new ErgoToken(hodlTokenId, hodlErgAmount)
+
+    val totalTokenSupply = (97739924 * math.pow(10, 9)).toLong
+    val precisionFactor = 1000000L
+    val minBankValue = 1000000L
+    val bankFeeNum = 3L
+    val devFeeNum = 1L
+
+    val minerFee = 1000000L
+    val minTxOperatorFee = 1000000L
+    val minBoxValue = 1000000L
+
+    val hodlBox = outBoxObj
+      .hodlBankBox(
+        phoenixContract,
+        hodlSingleton,
+        hodlTokens,
+        totalTokenSupply,
+        precisionFactor,
+        minBankValue,
+        bankFeeNum,
+        devFeeNum,
+        ergAmount
+      )
+      .convertToInputWith(fakeTxId1, fakeIndex)
+
+    val ergMintAmount = Parameters.OneErg
+
+    val proxyInput = outBoxObj
+      .proxyMintInputBox(
+        proxyContract,
+        userAddress,
+        hodlBankSingleton,
+        dummyHodlTokens,
+        minBoxValue,
+        minerFee,
+        ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
+      )
+      .convertToInputWith(fakeTxId1, fakeIndex)
+
+    val amountHodlToMint = hodlMintAmount(hodlBox, ergMintAmount)
+
+    println(amountHodlToMint)
+
+    val hodlOutBox = outBoxObj.hodlBankBox(
+      phoenixContract,
+      hodlSingleton,
+      new ErgoToken(hodlTokenId, hodlErgAmount - amountHodlToMint),
+      totalTokenSupply,
+      precisionFactor,
+      minBankValue,
+      bankFeeNum,
+      devFeeNum,
+      ergAmount + ergMintAmount
+    )
+
+    val recipientBox = outBoxObj.hodlMintBox(
+      userAddress,
+      new ErgoToken(hodlTokenId, amountHodlToMint)
     )
 
     val unsignedTransaction = txHelper.buildUnsignedTransaction(
@@ -336,7 +499,8 @@ class ProxySpec
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
 
-    val (userBoxAmount, devFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
+    val (userBoxAmount, devFeeAmount, bankFeeAmount) =
+      burnAmount(hodlBox, hodlBurnAmount)
 
     val proxyInput = outBoxObj
       .proxyBurnInputBox(
@@ -381,6 +545,99 @@ class ProxySpec
 
   }
 
+  "PhoenixBurnOperationWithProxyRealistic" should "succeed when all conditions are met" in {
+
+    val ergAmount = 1159000000000L
+    val hodlErgAmount = 97738765L
+
+    val hodlBurnAmount = 1L
+
+    val hodlSingleton = new ErgoToken(hodlBankNft, 1L)
+    val hodlTokens = new ErgoToken(hodlTokenId, hodlErgAmount)
+
+    val totalTokenSupply = 97739924L
+    val precisionFactor = 1000000L
+    val minBankValue = 1000000L
+    val bankFeeNum = 3L
+    val devFeeNum = 1L
+
+    val minerFee = 1000000L
+    val minTxOperatorFee = 1000000L
+    val minBoxValue = 1000000L
+
+    val hodlBox = outBoxObj
+      .hodlBankBox(
+        phoenixContract,
+        hodlSingleton,
+        hodlTokens,
+        totalTokenSupply,
+        precisionFactor,
+        minBankValue,
+        bankFeeNum,
+        devFeeNum,
+        ergAmount
+      )
+      .convertToInputWith(fakeTxId1, fakeIndex)
+
+    val (expectedAmountWithdrawn, devFeeAmount, bankFeeAmount) =
+      burnAmount(hodlBox, hodlBurnAmount)
+
+    val proxyInput = outBoxObj
+      .proxyBurnInputBox(
+        proxyContract,
+        userAddress,
+        hodlBankSingleton,
+        new ErgoToken(hodlTokenId, hodlBurnAmount),
+        minBoxValue,
+        minerFee,
+        minerFee + minTxOperatorFee // <-- note that minBoxValue is not needed
+      )
+      .convertToInputWith(fakeTxId1, fakeIndex)
+
+    println("Reserve In: " + ergAmount)
+    println(
+      "Reserve Out: " + (ergAmount - expectedAmountWithdrawn - devFeeAmount)
+    )
+    println("userBoxAmount: " + expectedAmountWithdrawn)
+    println("devFeeAmount: " + devFeeAmount)
+    println("bankFeeAmount: " + bankFeeAmount)
+
+    val hodlOutBox = outBoxObj.hodlBankBox(
+      phoenixContract,
+      hodlSingleton,
+      new ErgoToken(hodlTokenId, hodlErgAmount + hodlBurnAmount),
+      totalTokenSupply,
+      precisionFactor,
+      minBankValue,
+      bankFeeNum,
+      devFeeNum,
+      ergAmount - expectedAmountWithdrawn - devFeeAmount
+    )
+
+    val recipientBox =
+      outBoxObj.simpleOutBox(userAddress, expectedAmountWithdrawn)
+
+    val devFeeBox =
+      outBoxObj.simpleOutBox(feeContract.toAddress, devFeeAmount)
+
+    Array(hodlOutBox, recipientBox, devFeeBox).foreach(o =>
+      println("Output: " + o.getValue)
+    )
+
+    val unsignedTransaction = txHelper.buildUnsignedTransaction(
+      inputs = Array(hodlBox, proxyInput),
+      outputs = Array(hodlOutBox, recipientBox, devFeeBox),
+      fee = minerFee
+    )
+
+    noException shouldBe thrownBy {
+      txHelper.signTransaction(
+        unsignedTransaction
+      )
+    }
+
+  }
+
   "PhoenixBurnOperationWithProxy" should "succeed when all conditions are met with a generous tx operator fee" in {
 
     val ergAmount = 1000 * 1000000000L
@@ -407,8 +664,8 @@ class ProxySpec
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
 
-    val (userBoxAmount, devFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
-
+    val (userBoxAmount, devFeeAmount, bankFeeAmount) =
+      burnAmount(hodlBox, hodlBurnAmount)
     val proxyInput = outBoxObj
       .proxyBurnInputBox(
         proxyContract,
@@ -485,8 +742,8 @@ class ProxySpec
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
 
-    val (userBoxAmount, devFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
-
+    val (userBoxAmount, devFeeAmount, bankFeeAmount) =
+      burnAmount(hodlBox, hodlBurnAmount)
     val proxyInput = outBoxObj
       .proxyBurnInputBox(
         proxyContract,
@@ -552,8 +809,8 @@ class ProxySpec
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
 
-    val (userBoxAmount, devFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
-
+    val (userBoxAmount, devFeeAmount, bankFeeAmount) =
+      burnAmount(hodlBox, hodlBurnAmount)
     val proxyInput = outBoxObj
       .proxyBurnInputBox(
         proxyContract,
