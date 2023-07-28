@@ -70,6 +70,17 @@ case class BoxJson(
     mainChain: Boolean
 )
 
+case class UnspentBoxJson(
+    boxId: String,
+    value: Long,
+    ergoTree: String,
+    assets: Array[SimpleAssetsJson],
+    creationHeight: Int,
+    additionalRegistersJson: AdditionalRegistersJson,
+    transactionId: String,
+    index: Int
+)
+
 case class AdditionalRegistersJson(
     R4: RegisterJson,
     R5: RegisterJson,
@@ -101,6 +112,11 @@ case class AssetJson(
     name: String,
     decimals: Long,
     `type`: String
+)
+
+case class SimpleAssetsJson(
+    tokenId: String,
+    amount: Long
 )
 
 class BoxAPI(apiUrl: String, nodeUrl: String) {
@@ -273,6 +289,23 @@ class BoxAPI(apiUrl: String, nodeUrl: String) {
 
     RawResponse(allBoxes, allBoxes.length)
   }
+
+//  def getUnconfirmedInputsByBoxId(
+//      indexedNode: String = serviceOwnerConf.read("serviceOwner.json").nodeUrl,
+//      boxId: String
+//  ): Unit = {
+//    val get = new HttpGet(
+//      s"${indexedNode}/transactions/unconfirmed/inputs/byBoxId/${boxId}"
+//    )
+//    val response = client.execute(get)
+//    if (response.getStatusLine.getStatusCode == 400) {
+//      return null
+//    } else if (response.getStatusLine.getS        val resp = EntityUtils.toString(response.getEntity)
+//        val gson = new Gson()
+//        val liliumResponseEntry = gson.fromJson(resp, classOf[Array[NodeBoxJson]])
+//        liliumResponseEntryode == 200) {}
+//    val resp = EntityUtils.toString(response.getEntity)
+//  }
 
 // testnet mining address with plenty of utxos: mPdcmWTSJ6EJtnWk8LpK4ZXa7koomoiXgzZHGw8twRQ3U5W2npaixKAq6Fz5V5gfEhSXUBJ6YWMAu7pZ
 
