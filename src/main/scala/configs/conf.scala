@@ -10,16 +10,16 @@ case class ContractsConfig(
 )
 
 case class Config(
-    stateContract: StateContract,
-    issuerContract: IssuerContract,
+    bankContract: BankContract,
     proxyContract: ProxyContract,
-    collectionToken: String
+    feeContract: FeeContract
 )
-case class StateContract(
+case class BankContract(
     contract: String,
-    singleton: String
+    bankSingleton: String,
+    hodlCoin: String
 )
-case class IssuerContract(
+case class FeeContract(
     contract: String
 )
 case class ProxyContract(
@@ -27,23 +27,22 @@ case class ProxyContract(
 )
 
 class conf(
-    stateContract: String,
-    singleton: String,
-    issuerContract: String,
-    proxyContract: String,
-    collectionToken: String
+    bankContract: String,
+    bankSingleton: String,
+    hodlCoin: String,
+    feeContract: String,
+    proxyContract: String
 ) {
-  val stateContractInstance: StateContract =
-    StateContract(stateContract, singleton)
-  val issuerContractInstance: IssuerContract =
-    IssuerContract(issuerContract)
+  val bankContractInstance: BankContract =
+    BankContract(bankContract, bankSingleton, hodlCoin)
+  val feeContractInstance: FeeContract =
+    FeeContract(feeContract)
   val proxyContractInstance: ProxyContract = ProxyContract(proxyContract)
 
   val conf = Config(
-    stateContractInstance,
-    issuerContractInstance,
+    bankContractInstance,
     proxyContractInstance,
-    collectionToken
+    feeContractInstance
   )
   val newConfig: ContractsConfig = ContractsConfig(conf)
   private val gson = new GsonBuilder().setPrettyPrinting().create()
@@ -81,7 +80,10 @@ case class ServiceOwnerConfig(
     txOperatorMnemonic: String,
     txOperatorMnemonicPw: String,
     nodeUrl: String,
-    apiUrl: String
+    apiUrl: String,
+    minTxOperatorFee: Long,
+    minBoxValue: Long,
+    minMinerFee: Long
 )
 
 object serviceOwnerConf {
