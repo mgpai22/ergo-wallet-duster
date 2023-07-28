@@ -1,5 +1,4 @@
 package execute
-import configs.serviceOwnerConf
 import node.{MainNetNodeExplorerInfo, NodeInfo, TestNetNodeExplorerInfo}
 import org.ergoplatform.appkit.NetworkType
 
