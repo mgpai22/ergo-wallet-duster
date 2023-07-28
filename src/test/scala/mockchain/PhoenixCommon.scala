@@ -132,9 +132,6 @@ trait PhoenixCommon extends HttpClientTesting {
   def hodlMintAmountFromERG(hodlBoxIn: InputBox, ergMintAmt: Long): Long = {
     val price = hodlPrice(hodlBoxIn)
     val precisionFactor = extractPrecisionFactor(hodlBoxIn)
-    println(price)
-    println(ergMintAmt * precisionFactor)
-    println(ergMintAmt * precisionFactor / price)
     ergMintAmt * precisionFactor / price
   }
 
