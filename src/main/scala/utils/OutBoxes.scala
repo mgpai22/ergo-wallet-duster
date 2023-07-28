@@ -152,8 +152,8 @@ class OutBoxes(ctx: BlockchainContext) {
         ErgoValue.of(totalTokenSupply),
         ErgoValue.of(precisionFactor),
         ErgoValue.of(minBankValue),
-        ErgoValue.of(bankFeeNum),
-        ErgoValue.of(devFeeNum)
+        ErgoValue.of(devFeeNum),
+        ErgoValue.of(bankFeeNum)
       )
       .contract(hodlContract)
       .build()
