@@ -300,8 +300,7 @@ class PhoenixSpec
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
 
-    val (userBoxAmount, devFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
-
+    val (userBoxAmount, devFeeAmount, bankFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
     val fundingBox = outBoxObj
       .tokenOutBox(
         Array(new ErgoToken(hodlTokenId, hodlBurnAmount)),
@@ -364,8 +363,7 @@ class PhoenixSpec
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
 
-    val (userBoxAmount, devFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
-
+    val (userBoxAmount, devFeeAmount, bankFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
     val fundingBox = outBoxObj
       .tokenOutBox(
         Array(new ErgoToken(hodlTokenId, hodlBurnAmount)),
@@ -429,8 +427,7 @@ class PhoenixSpec
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
 
-    val (userBoxAmount, devFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
-
+    val (userBoxAmount, devFeeAmount, bankFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
     val fundingBox = outBoxObj
       .tokenOutBox(
         Array(new ErgoToken(hodlTokenId, hodlBurnAmount)),
@@ -497,8 +494,7 @@ class PhoenixSpec
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
 
-    val (userBoxAmount, devFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
-
+    val (userBoxAmount, devFeeAmount, bankFeeAmount) = burnAmount(hodlBox, hodlBurnAmount)
     val fundingBox = outBoxObj
       .tokenOutBox(
         Array(new ErgoToken(hodlTokenId, hodlBurnAmount)),
