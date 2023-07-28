@@ -1,6 +1,8 @@
 {
   "txOperatorMnemonic": "",
   "txOperatorMnemonicPw": "",
-  "nodeUrl": "http://213.239.193.208:9052",
-  "apiUrl": "https://tn-ergo-explorer.anetabtc.io"
+  "nodeUrl": "http://168.138.185.215:9052",
+  "apiUrl": "https://tn-ergo-explorer.anetabtc.io",
+  "minTxOperatorFee": 1000000,
+  "minMinerFee": 1000000
 }
