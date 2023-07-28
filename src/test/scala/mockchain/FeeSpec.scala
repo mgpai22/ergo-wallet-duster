@@ -174,6 +174,38 @@ class FeeSpec
 
   }
 
+  "FeeContractWithdrawal" must "fail when dust is claimed" in {
+
+    val feeContractInput =
+      outBoxObj
+        .simpleOutBox(feeContract.toAddress, 2100000L) // <-- this changed
+        .convertToInputWith(fakeTxId1, fakeIndex)
+
+    val devAmount = feeContractInput.getValue - minMinerFeeNanoErg
+    val devAllocation =
+      ((devPercentNumerator * devAmount) / percentDenominator) / 3L
+    val devBoxes = getDevBoxes(devAllocation)
+
+    val phoenixAllocation =
+      (phoenixPercentNumerator * devAmount) / percentDenominator
+    val phoenixBox =
+      outBoxObj.simpleOutBox(
+        phoenixAddress,
+        phoenixAllocation
+      )
+
+    val unsignedTransaction = txHelper.buildUnsignedTransaction(
+      inputs = Array(feeContractInput),
+      outputs = devBoxes :+ phoenixBox,
+      fee = minMinerFeeNanoErg
+    )
+
+    the[Exception] thrownBy {
+      txHelper.signTransaction(unsignedTransaction)
+    } should have message "Script reduced to false"
+
+  }
+
   "FeeContractWithdrawal" should "fail with incorrect signer" in {
 
     // random signer
