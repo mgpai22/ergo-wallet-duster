@@ -1,6 +1,5 @@
 package main
 
-import contracts.PhoenixContracts
 import execute.Client
 import utils.ContractCompile
 
