@@ -17,7 +17,7 @@ import java.util
 import scala.collection.JavaConversions._
 
 class explorerApi(
-    apiUrl: String,
+    apiUrl: String = serviceOwnerConf.read("serviceOwner.json").apiUrl,
     nodeUrl: String = serviceOwnerConf.read("serviceOwner.json").nodeUrl
 ) extends Explorer(
       nodeInfo = execute.DefaultNodeInfo(
