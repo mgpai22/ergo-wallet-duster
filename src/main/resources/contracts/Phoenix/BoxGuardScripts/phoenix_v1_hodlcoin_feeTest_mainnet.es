@@ -30,7 +30,7 @@
     val phoenixPercentageNum: Long = 40L
 
     // ===== Relevant Variables ===== //
-    val dev1Address: SigmaProp                  = PK("9hHondX3uZMY2wQsXuCGjbgZUqunQyZCNNuwGu6rL7AJC8dhRGa")
+    val dev1Address: SigmaProp                  = PK("9exfustUCPDKXsfDrGNrmtkyLDwAie2rKKdUsPVa26RuBFaYeCL") // revert back to original address
     val dev2Address: SigmaProp                  = PK("9gnBtmSRBMaNTkLQUABoAqmU2wzn27hgqVvezAC9SU1VqFKZCp8")
     val dev3Address: SigmaProp                  = PK("9iE2MadGSrn1ivHmRZJWRxzHffuAk6bPmEv6uJmPHuadBY8td5u")
     val phoenixAddress: SigmaProp               = PK("9iPs1ujGj2eKXVg82aGyAtUtQZQWxFaki48KFixoaNmUAoTY6wV")
@@ -56,7 +56,7 @@
         }
 
         val validMinAmount: Boolean = {
-            outputAmount >= 3000000L // this prevents dust transactions
+            outputAmount >= 2000000L // this prevents dust transactions
         }
 
         val validDevBoxes: Boolean = {
