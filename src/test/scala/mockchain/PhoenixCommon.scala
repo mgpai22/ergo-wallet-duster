@@ -42,7 +42,7 @@ trait PhoenixCommon extends HttpClientTesting {
     Address.create("9eiuh5bJtw9oWDVcfJnwTm1EHfK5949MEm5DStc2sD1TLwDSrpx")
 
   val feeScript: String =
-    PhoenixContracts.phoenix_v1_hodlcoin_feeTest.contractScript
+    PhoenixContracts.phoenix_v1_hodlcoin_feeTest_mainnet.contractScript
 
   val phoenixScript: String =
     PhoenixContracts.phoenix_v1_hodlcoin_bank.contractScript
@@ -98,17 +98,26 @@ trait PhoenixCommon extends HttpClientTesting {
     hodlMintAmt * price / precisionFactor
   }
 
+  /** @return amount of hodl tokens to mint give amount of ERGs paid
+    */
+  def hodlMintAmount(hodlBoxIn: InputBox, ergMintAmt: Long): Long = {
+    val price = hodlPrice(hodlBoxIn)
+    val precisionFactor = extractPrecisionFactor(hodlBoxIn)
+    ergMintAmt * precisionFactor / price
+  }
+
   // amount of (nano) ERGs which can be released to when given amount of hodlcoins burnt
 
   /** @return amount of (nano) ERGs which can be released to when given amount of hodlcoins burnt to user,
     *         and also dev fee
     */
-  def burnAmount(hodlBoxIn: InputBox, hodlBurnAmt: Long): (Long, Long) = {
+  def burnAmount(hodlBoxIn: InputBox, hodlBurnAmt: Long): (Long, Long, Long) = {
     val feeDenom = 1000L
 
-    val bankFee =
+    val devFee =
       hodlBoxIn.getRegisters.get(3).getValue.asInstanceOf[Long] // R7
-    val devFee = hodlBoxIn.getRegisters.get(3).getValue.asInstanceOf[Long] // R8
+    val bankFee =
+      hodlBoxIn.getRegisters.get(4).getValue.asInstanceOf[Long] // R8
 
     val price = hodlPrice(hodlBoxIn)
     val precisionFactor = extractPrecisionFactor(hodlBoxIn)
@@ -117,6 +126,16 @@ trait PhoenixCommon extends HttpClientTesting {
     val devFeeAmount: Long = (beforeFees * devFee) / feeDenom
     val expectedAmountWithdrawn: Long =
       beforeFees - bankFeeAmount - devFeeAmount
-    (expectedAmountWithdrawn, devFeeAmount)
+    (expectedAmountWithdrawn, devFeeAmount, bankFeeAmount)
   }
+
+  def hodlMintAmountFromERG(hodlBoxIn: InputBox, ergMintAmt: Long): Long = {
+    val price = hodlPrice(hodlBoxIn)
+    val precisionFactor = extractPrecisionFactor(hodlBoxIn)
+    println(price)
+    println(ergMintAmt * precisionFactor)
+    println(ergMintAmt * precisionFactor / price)
+    ergMintAmt * precisionFactor / price
+  }
+
 }
