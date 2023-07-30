@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  phoenix-offchain:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./serviceOwner.json:/app/serviceOwner.json
