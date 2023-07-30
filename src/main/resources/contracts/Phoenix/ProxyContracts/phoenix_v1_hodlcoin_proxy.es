@@ -215,18 +215,7 @@
 
             }
 
-            val validMinerFee: Boolean = {
-
-            OUTPUTS.map { (o: Box) =>
-                if (blake2b256(o.propositionBytes) == minerFeeErgoTreeBytesHash) o.value else 0L
-            }.fold(0L, { (a: Long, b: Long) => a + b }) >= recommendedMinerFee
-
-            }
-
-            allOf(Coll(
-                validBuyerBoxOUT,
-                validMinerFee
-            ))
+            validBuyerBoxOUT
 
         }
 
