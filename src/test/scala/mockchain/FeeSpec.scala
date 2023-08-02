@@ -26,23 +26,26 @@ class FeeSpec
     ""
   )
 
-  val dev1Address: Address = Address.create(
-    "9exfustUCPDKXsfDrGNrmtkyLDwAie2rKKdUsPVa26RuBFaYeCL"
-  ) // revert back to original address
-  val dev2Address: Address =
-    Address.create("9gnBtmSRBMaNTkLQUABoAqmU2wzn27hgqVvezAC9SU1VqFKZCp8")
-  val dev3Address: Address =
+  val brunoAddress: Address = Address.create(
+    "9exfustUCPDKXsfDrGNrmtkyLDwAie2rKKdUsPVa26RuBFaYeCL" // revert back to original address
+  )
+  val pulsarzAddress: Address =
+    Address.create("9hHondX3uZMY2wQsXuCGjbgZUqunQyZCNNuwGu6rL7AJC8dhRGa")
+  val kushtiAddress: Address =
     Address.create("9iE2MadGSrn1ivHmRZJWRxzHffuAk6bPmEv6uJmPHuadBY8td5u")
+  val krasAddress: Address = Address.create("9i9RhfdHQA2bHA8GqWKkYevp3nozASRjJfFkh29utjNL9gqE7Q7")
   val phoenixAddress: Address =
     Address.create("9iPs1ujGj2eKXVg82aGyAtUtQZQWxFaki48KFixoaNmUAoTY6wV")
 
   val feeContractAmount: Long = (100 * math.pow(10, 9)).toLong
 
-  def getDevBoxes(amountPerDev: Long): Array[OutBox] = {
+  def getDevBoxes(totalAmountForDevs: Long): Array[OutBox] = {
     Array(
-      outBoxObj.simpleOutBox(dev1Address, amountPerDev),
-      outBoxObj.simpleOutBox(dev2Address, amountPerDev),
-      outBoxObj.simpleOutBox(dev3Address, amountPerDev)
+      outBoxObj.simpleOutBox(brunoAddress, (brunoNum * totalAmountForDevs)/feeDenom),
+      outBoxObj.simpleOutBox(pulsarzAddress, (pulsarzNum * totalAmountForDevs)/feeDenom),
+      outBoxObj.simpleOutBox(phoenixAddress, (phoenixNum * totalAmountForDevs)/feeDenom),
+      outBoxObj.simpleOutBox(kushtiAddress, (kushtiNum * totalAmountForDevs)/feeDenom),
+      outBoxObj.simpleOutBox(krasAddress, (krasNum * totalAmountForDevs)/feeDenom)
     )
   }
 
@@ -54,17 +57,13 @@ class FeeSpec
         .convertToInputWith(fakeTxId1, fakeIndex)
 
     val devAmount = feeContractInput.getValue - minMinerFeeNanoErg
-    val devAllocation =
-      ((devPercentNumerator * devAmount) / percentDenominator) / 3L
-    val devBoxes = getDevBoxes(devAllocation)
 
-    val phoenixAllocation =
-      (phoenixPercentNumerator * devAmount) / percentDenominator
-    val phoenixBox = outBoxObj.simpleOutBox(phoenixAddress, phoenixAllocation)
+    val devBoxes = getDevBoxes(devAmount)
+
 
     val unsignedTransaction = txHelper.buildUnsignedTransaction(
       inputs = Array(feeContractInput),
-      outputs = devBoxes :+ phoenixBox,
+      outputs = devBoxes,
       fee = minMinerFeeNanoErg
     )
 
@@ -86,17 +85,12 @@ class FeeSpec
     val highMinerFee = 100000000L
 
     val devAmount = feeContractInput.getValue - highMinerFee
-    val devAllocation =
-      ((devPercentNumerator * devAmount) / percentDenominator) / 3L
-    val devBoxes = getDevBoxes(devAllocation)
 
-    val phoenixAllocation =
-      (phoenixPercentNumerator * devAmount) / percentDenominator
-    val phoenixBox = outBoxObj.simpleOutBox(phoenixAddress, phoenixAllocation)
+    val devBoxes = getDevBoxes(devAmount)
 
     val unsignedTransaction = txHelper.buildUnsignedTransaction(
       inputs = Array(feeContractInput),
-      outputs = devBoxes :+ phoenixBox,
+      outputs = devBoxes,
       fee = highMinerFee
     )
 
@@ -110,27 +104,31 @@ class FeeSpec
 
   "FeeContractWithdrawal" should "fail with incorrect allocation" in {
 
+    def getDevBoxes(totalAmountForDevs: Long): Array[OutBox] = {
+
+      val brunoNum = 20L // <-- this changed
+      val kushtiNum = 20L // <-- this changed
+      Array(
+        outBoxObj.simpleOutBox(brunoAddress, (brunoNum * totalAmountForDevs) / feeDenom),
+        outBoxObj.simpleOutBox(pulsarzAddress, (pulsarzNum * totalAmountForDevs) / feeDenom),
+        outBoxObj.simpleOutBox(phoenixAddress, (phoenixNum * totalAmountForDevs) / feeDenom),
+        outBoxObj.simpleOutBox(kushtiAddress, (kushtiNum * totalAmountForDevs) / feeDenom),
+        outBoxObj.simpleOutBox(krasAddress, (krasNum * totalAmountForDevs) / feeDenom)
+      )
+    }
+
     val feeContractInput =
       outBoxObj
         .simpleOutBox(feeContract.toAddress, feeContractAmount)
         .convertToInputWith(fakeTxId1, fakeIndex)
 
     val devAmount = feeContractInput.getValue - minMinerFeeNanoErg
-    val devAllocation =
-      ((devPercentNumerator * devAmount) / percentDenominator) / 3L
-    val devBoxes = getDevBoxes(devAllocation + 1L) // <-- this changed
 
-    val phoenixAllocation =
-      (phoenixPercentNumerator * devAmount) / percentDenominator
-    val phoenixBox =
-      outBoxObj.simpleOutBox(
-        phoenixAddress,
-        phoenixAllocation - 3L // <-- this changed
-      )
+    val devBoxes = getDevBoxes(devAmount)
 
     val unsignedTransaction = txHelper.buildUnsignedTransaction(
       inputs = Array(feeContractInput),
-      outputs = devBoxes :+ phoenixBox,
+      outputs = devBoxes,
       fee = minMinerFeeNanoErg
     )
 
@@ -142,29 +140,31 @@ class FeeSpec
 
   "FeeContractWithdrawal" must "fail when the wrong address is used for receiving" in {
 
+    def getDevBoxes(totalAmountForDevs: Long): Array[OutBox] = {
+
+      val brunoAddress = Address.create("9fVNf9XCUitP8GDZk7gitfxMetQQdsyV5QxTbBo3AKWW5BJxSkn")
+
+      Array(
+        outBoxObj.simpleOutBox(brunoAddress, (brunoNum * totalAmountForDevs) / feeDenom),
+        outBoxObj.simpleOutBox(pulsarzAddress, (pulsarzNum * totalAmountForDevs) / feeDenom),
+        outBoxObj.simpleOutBox(phoenixAddress, (phoenixNum * totalAmountForDevs) / feeDenom),
+        outBoxObj.simpleOutBox(kushtiAddress, (kushtiNum * totalAmountForDevs) / feeDenom),
+        outBoxObj.simpleOutBox(krasAddress, (krasNum * totalAmountForDevs) / feeDenom)
+      )
+    }
+
     val feeContractInput =
       outBoxObj
         .simpleOutBox(feeContract.toAddress, feeContractAmount)
         .convertToInputWith(fakeTxId1, fakeIndex)
 
     val devAmount = feeContractInput.getValue - minMinerFeeNanoErg
-    val devAllocation =
-      ((devPercentNumerator * devAmount) / percentDenominator) / 3L
-    val devBoxes = getDevBoxes(devAllocation)
 
-    val phoenixAllocation =
-      (phoenixPercentNumerator * devAmount) / percentDenominator
-    val phoenixBox =
-      outBoxObj.simpleOutBox(
-        Address.create(
-          "9gNYeyfRFUipiWZ3JR1ayDMoeh28E6J7aDQosb7yrzsuGSDqzCC" // <-- this changed
-        ),
-        phoenixAllocation
-      )
+    val devBoxes = getDevBoxes(devAmount)
 
     val unsignedTransaction = txHelper.buildUnsignedTransaction(
       inputs = Array(feeContractInput),
-      outputs = devBoxes :+ phoenixBox,
+      outputs = devBoxes,
       fee = minMinerFeeNanoErg
     )
 
@@ -182,21 +182,12 @@ class FeeSpec
         .convertToInputWith(fakeTxId1, fakeIndex)
 
     val devAmount = feeContractInput.getValue - minMinerFeeNanoErg
-    val devAllocation =
-      ((devPercentNumerator * devAmount) / percentDenominator) / 3L
-    val devBoxes = getDevBoxes(devAllocation)
 
-    val phoenixAllocation =
-      (phoenixPercentNumerator * devAmount) / percentDenominator
-    val phoenixBox =
-      outBoxObj.simpleOutBox(
-        phoenixAddress,
-        phoenixAllocation
-      )
+    val devBoxes = getDevBoxes(devAmount)
 
     val unsignedTransaction = txHelper.buildUnsignedTransaction(
       inputs = Array(feeContractInput),
-      outputs = devBoxes :+ phoenixBox,
+      outputs = devBoxes,
       fee = minMinerFeeNanoErg
     )
 
@@ -221,21 +212,12 @@ class FeeSpec
         .convertToInputWith(fakeTxId1, fakeIndex)
 
     val devAmount = feeContractInput.getValue - minMinerFeeNanoErg
-    val devAllocation =
-      ((devPercentNumerator * devAmount) / percentDenominator) / 3L
-    val devBoxes = getDevBoxes(devAllocation)
 
-    val phoenixAllocation =
-      (phoenixPercentNumerator * devAmount) / percentDenominator
-    val phoenixBox =
-      outBoxObj.simpleOutBox(
-        phoenixAddress,
-        phoenixAllocation
-      )
+    val devBoxes = getDevBoxes(devAmount)
 
     val unsignedTransaction = txHelper.buildUnsignedTransaction(
       inputs = Array(feeContractInput),
-      outputs = devBoxes :+ phoenixBox,
+      outputs = devBoxes,
       fee = minMinerFeeNanoErg
     )
 
@@ -254,27 +236,22 @@ class FeeSpec
 
     val feeContractInput2 =
       outBoxObj
-        .simpleOutBox(feeContract.toAddress, 100000L)
+        .simpleOutBox(feeContract.toAddress, 1000000L)
         .convertToInputWith(fakeTxId2, fakeIndex)
 
     val feeContractInput3 =
       outBoxObj
-        .simpleOutBox(feeContract.toAddress, 100004314250L)
+        .simpleOutBox(feeContract.toAddress, 6969696960L)
         .convertToInputWith(fakeTxId3, fakeIndex)
 
     val devAmount =
       (feeContractInput.getValue + feeContractInput2.getValue + feeContractInput3.getValue) - minMinerFeeNanoErg
-    val devAllocation =
-      ((devPercentNumerator * devAmount) / percentDenominator) / 3L
-    val devBoxes = getDevBoxes(devAllocation)
 
-    val phoenixAllocation =
-      (phoenixPercentNumerator * devAmount) / percentDenominator
-    val phoenixBox = outBoxObj.simpleOutBox(phoenixAddress, phoenixAllocation)
+    val devBoxes = getDevBoxes(devAmount)
 
     val unsignedTransaction = txHelper.buildUnsignedTransaction(
       inputs = Array(feeContractInput, feeContractInput2, feeContractInput3),
-      outputs = devBoxes :+ phoenixBox,
+      outputs = devBoxes,
       fee = minMinerFeeNanoErg
     )
 

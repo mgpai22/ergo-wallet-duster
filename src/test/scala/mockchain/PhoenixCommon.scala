@@ -23,9 +23,12 @@ trait PhoenixCommon extends HttpClientTesting {
   val txHelper = new TransactionHelper(ctx, "", "")
   val outBoxObj = new OutBoxes(ctx)
 
-  val percentDenominator = 100L
-  val devPercentNumerator = 60L
-  val phoenixPercentNumerator = 40L
+  val feeDenom: Long = 100L
+  val brunoNum: Long = 25L
+  val pulsarzNum: Long = 25L
+  val phoenixNum: Long = 25L
+  val kushtiNum: Long = 15L
+  val krasNum: Long = 10L
 
   val minMinerFeeNanoErg = 1600000L
 
