@@ -16,7 +16,7 @@
     // 1. Fee Distribution Tx
     // Inputs: PhoenixFee1, ... , PhoenixFeeM
     // DataInputs: None
-    // Outputs: Dev1PK, Dev2PK, Dev3PK, PhoenixPK
+    // Outputs: Bruno, Pulsarz, Phoenix, Kushti, Kras, MinerFee
     // Context Variables: None
 
     // ===== Compile Time Constants ($) ===== //
@@ -25,86 +25,82 @@
     // ===== Context Variables (@) ===== //
     // None
 
-    val feeDenom = 100L
-    val devPercentageNum: Long = 60L
-    val phoenixPercentageNum: Long = 40L
-
     // ===== Relevant Variables ===== //
-    val dev1Address: SigmaProp                  = PK("9hHondX3uZMY2wQsXuCGjbgZUqunQyZCNNuwGu6rL7AJC8dhRGa")
-    val dev2Address: SigmaProp                  = PK("9gnBtmSRBMaNTkLQUABoAqmU2wzn27hgqVvezAC9SU1VqFKZCp8")
-    val dev3Address: SigmaProp                  = PK("9iE2MadGSrn1ivHmRZJWRxzHffuAk6bPmEv6uJmPHuadBY8td5u")
-    val phoenixAddress: SigmaProp               = PK("9iPs1ujGj2eKXVg82aGyAtUtQZQWxFaki48KFixoaNmUAoTY6wV")
-    val minerFeeErgoTreeBytesHash: Coll[Byte]   = fromBase16("e540cceffd3b8dd0f401193576cc413467039695969427df94454193dddfb375")
+    val minerFeeErgoTreeBytesHash: Coll[Byte] = fromBase16("e540cceffd3b8dd0f401193576cc413467039695969427df94454193dddfb375")
+
+    val feeDenom: Long   = 100L
+    val brunoNum: Long   = 25L
+    val pulsarzNum: Long = 25L
+    val phoenixNum: Long = 25L
+    val kushtiNum: Long  = 15L
+    val krasNum: Long    = 10L
+
+    val brunoAddress: SigmaProp   = PK("9gnBtmSRBMaNTkLQUABoAqmU2wzn27hgqVvezAC9SU1VqFKZCp8")
+    val pulsarzAddress: SigmaProp = PK("9hHondX3uZMY2wQsXuCGjbgZUqunQyZCNNuwGu6rL7AJC8dhRGa")
+    val phoenixAddress: SigmaProp = PK("9iPs1ujGj2eKXVg82aGyAtUtQZQWxFaki48KFixoaNmUAoTY6wV")
+    val kushtiAddress: SigmaProp  = PK("9iE2MadGSrn1ivHmRZJWRxzHffuAk6bPmEv6uJmPHuadBY8td5u")
+    val krasAddress: SigmaProp    = PK("9i9RhfdHQA2bHA8GqWKkYevp3nozASRjJfFkh29utjNL9gqE7Q7")
 
     // ===== Fee Distribution Tx ===== //
     val validFeeDistributionTx: Boolean = {
 
-        // Outputs
-        val dev1BoxOUT: Box     = OUTPUTS(0)
-        val dev2BoxOUT: Box     = OUTPUTS(1)
-        val dev3BoxOUT: Box     = OUTPUTS(2)
-        val phoenixBoxOUT: Box  = OUTPUTS(3)
-        val minerFeeBoxOUT: Box = OUTPUTS(4)
+    // Outputs
+    val brunoBoxOUT: Box    = OUTPUTS(0)
+    val pulsarzBoxOUT: Box  = OUTPUTS(1)
+    val phoenixBoxOUT: Box  = OUTPUTS(2)
+    val kushtiBoxOUT: Box   = OUTPUTS(3)
+    val krasBoxOUT: Box     = OUTPUTS(4)
+    val minerFeeBoxOUT: Box = OUTPUTS(5)
 
-        val outputAmount: Long = OUTPUTS.map({ (output: Box) => output.value }).fold(0L, { (acc: Long, curr: Long) => acc + curr })
-        val devAmount: Long = outputAmount - minerFeeBoxOUT.value // In case the miner fee increases in the future.
+    val outputAmount: Long = OUTPUTS.map({ (output: Box) => output.value }).fold(0L, { (acc: Long, curr: Long) => acc + curr })
+    val devAmount: Long = outputAmount - minerFeeBoxOUT.value // In case the miner fee increases in the future.
 
-        val validPercentages: Boolean = {
+    val validMinAmount: Boolean = (outputAmount >= 5000000L) // This prevents dust transactions
 
-            (devPercentageNum * feeDenom + phoenixPercentageNum * feeDenom) == (feeDenom * feeDenom) // (a/b + c/d = 1 => ad + cb = bd)
+    val validDevBoxes: Boolean = {
 
-        }
+    val brunoAmount: Long   = (brunoNum * devAmount) / feeDenom
+    val pulsarzAmount: Long = (pulsarzNum * devAmount) / feeDenom
+    val phoenixAmount: Long = (phoenixNum * devAmount) / feeDenom
+    val kushtiAmount: Long  = (kushtiNum * devAmount) / feeDenom
+    val krasAmount: Long    = (krasNum * devAmount) / feeDenom
 
-        val validMinAmount: Boolean = {
-            outputAmount >= 3000000L // this prevents dust transactions
-        }
+    val validBruno: Boolean   = (brunoBoxOUT.value == brunoAmount) && (brunoBoxOUT.propositionBytes == brunoAddress.propBytes)
+    val validPulsarz: Boolean = (pulsarzBoxOUT.value == pulsarzAmount) && (pulsarzBoxOUT.propositionBytes == pulsarzAddress.propBytes)
+    val validPhoenix: Boolean = (phoenixBoxOUT.value == phoenixAmount) && (phoenixBoxOUT.propositionBytes == phoenixAddress.propBytes)
+    val validKushti: Boolean  = (kushtiBoxOUT.value == kushtiAmount) && (kushtiBoxOUT.propositionBytes == kushtiAddress.propBytes)
+    val validKras: Boolean    = (krasBoxOUT.value == krasAmount) && (krasBoxOUT.propositionBytes == krasAddress.propBytes)
 
-        val validDevBoxes: Boolean = {
+    allOf(Coll(
+        validBruno,
+        validPulsarz,
+        validPhoenix,
+        validKushti,
+        validKras
+    ))
 
-            val devAllocation: Long = ((devPercentageNum * devAmount) / feeDenom) / 3L
+}
 
-            allOf(Coll(
-                (dev1BoxOUT.value == devAllocation),
-                (dev1BoxOUT.propositionBytes == dev1Address.propBytes),
-                (dev2BoxOUT.value == devAllocation),
-                (dev2BoxOUT.propositionBytes == dev2Address.propBytes),
-                (dev3BoxOUT.value == devAllocation),
-                (dev3BoxOUT.propositionBytes == dev3Address.propBytes)
-            ))
+    val validMinerFee: Boolean = {
 
-        }
+    allOf(Coll(
+        (minerFeeBoxOUT.value >= $minerFee), // In case the miner fee increases in the future
+            (blake2b256(minerFeeBoxOUT.propositionBytes) == minerFeeErgoTreeBytesHash)
+    ))
 
-        val validPhoenixBox: Boolean = {
+}
 
-            allOf(Coll(
-                (phoenixBoxOUT.value == (phoenixPercentageNum * devAmount) / feeDenom),
-                (phoenixBoxOUT.propositionBytes == phoenixAddress.propBytes)
-            ))
+    val validOutputSize: Boolean = (OUTPUTS.size == 6)
 
-        }
+    allOf(Coll(
+        validMinAmount,
+        validDevBoxes,
+        validMinerFee,
+        validOutputSize
+    ))
 
-        val validMinerFee: Boolean = {
+}
 
-            allOf(Coll(
-                (minerFeeBoxOUT.value >= $minerFee), // In case the miner fee increases in the future
-                (blake2b256(minerFeeBoxOUT.propositionBytes) == minerFeeErgoTreeBytesHash)
-            ))
-
-        }
-
-        val validOutputSize: Boolean = (OUTPUTS.size == 5)
-
-        allOf(Coll(
-            validPercentages,
-            validDevBoxes,
-            validMinAmount,
-            validPhoenixBox,
-            validMinerFee,
-            validOutputSize
-        ))
-
-    }
-
-    sigmaProp(validFeeDistributionTx) && atLeast(1, Coll(dev1Address, dev2Address, dev3Address, phoenixAddress)) // Done so we are incentivized to not spam the miner fee.
+    sigmaProp(validFeeDistributionTx) && atLeast(1, Coll(brunoAddress, pulsarzAddress, phoenixAddress, kushtiAddress, krasAddress)) // Done so we are incentivized to not spam the miner fee.
 
 }
