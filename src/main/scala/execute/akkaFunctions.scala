@@ -36,7 +36,7 @@ class akkaFunctions {
   private val outBoxObj = new OutBoxes(ctx)
 
   private val feeScript: String =
-    PhoenixContracts.phoenix_v1_hodlcoin_feeTest.contractScript
+    PhoenixContracts.phoenix_v1_hodlcoin_fee.contractScript
 
   private val phoenixScript: String =
     PhoenixContracts.phoenix_v1_hodlcoin_bank.contractScript
@@ -402,8 +402,19 @@ class akkaFunctions {
         .getUnspentBoxesFromApi(proxyAddress.toString, selectAll = true)
         .items
 
-    mint(boxes)
+    mintWithRetry(boxes)
 
+  }
+
+  def mintWithRetry(boxes: Array[BoxJson]): Unit = {
+    try {
+      mint(boxes) // Call the mint function
+    } catch {
+      case _: Throwable => // Catch any error thrown
+        if (boxes.nonEmpty) {
+          mintWithRetry(boxes.tail) // Call mintWithRetry with the first element deleted from the boxes array
+        }
+    }
   }
 
   def validateBox(
