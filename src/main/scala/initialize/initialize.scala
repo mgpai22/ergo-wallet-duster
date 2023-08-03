@@ -25,9 +25,9 @@ object initialize extends App {
   val compiler = new ContractCompile(ctx)
 
   private val feeScript: String =
-    PhoenixContracts.phoenix_v1_hodlcoin_feeTest.contractScript
+    PhoenixContracts.phoenix_v1_hodlcoin_fee.contractScript
 
-  private val phoenixScript: String =
+  private val phoenixScript: String = // make sure to change depending on testnet or mainnet
     PhoenixContracts.phoenix_v1_hodlcoin_bank.contractScript
 
   private val feeContract: ErgoContract = compiler.compileFeeContract(
@@ -49,8 +49,8 @@ object initialize extends App {
   val totalTokenSupply = (97739924 * math.pow(10, hodlDecimals)).toLong
   val precisionFactor = 1000000L
   val minBankValue = 1000000L
-  val bankFeeNum = 3L
-  val devFeeNum = 1L
+  val bankFeeNum = 30L
+  val devFeeNum = 3L
 
   val hodlDecimal = 9
 
@@ -62,8 +62,8 @@ object initialize extends App {
 
   val singleton = outBoxObj.tokenHelper(
     genesisInput.head,
-    "phoenixBankSingleton",
-    "Identification token",
+    "phoenixHodlBankSingleton",
+    "Phoenix Hodl Bank Identification Token",
     1L,
     0
   )
@@ -88,8 +88,8 @@ object initialize extends App {
 
   val hodlTokens = outBoxObj.tokenHelper(
     hodlTokenMintInput,
-    "hodlToken",
-    "Hodl Token",
+    "hodlERG3",
+    "The Phoenix Finance implementation of the hodlCoin protocol: hodlERG 3%",
     totalTokenSupply,
     hodlDecimal
   )
