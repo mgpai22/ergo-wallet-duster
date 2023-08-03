@@ -33,7 +33,7 @@ class FeeSpec
     Address.create("9hHondX3uZMY2wQsXuCGjbgZUqunQyZCNNuwGu6rL7AJC8dhRGa")
   val kushtiAddress: Address =
     Address.create("9iE2MadGSrn1ivHmRZJWRxzHffuAk6bPmEv6uJmPHuadBY8td5u")
-  val krasAddress: Address = Address.create("9i9RhfdHQA2bHA8GqWKkYevp3nozASRjJfFkh29utjNL9gqE7Q7")
+  val krasAddress: Address = Address.create("9g8QaPWTnx71tDdqgzdqZVdNg1cKgEHhAhjCvFqV7ggxRVwycCg")
   val phoenixAddress: Address =
     Address.create("9iPs1ujGj2eKXVg82aGyAtUtQZQWxFaki48KFixoaNmUAoTY6wV")
 

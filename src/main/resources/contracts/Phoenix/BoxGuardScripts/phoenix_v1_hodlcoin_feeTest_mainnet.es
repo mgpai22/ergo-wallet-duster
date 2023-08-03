@@ -35,11 +35,11 @@
     val kushtiNum: Long  = 15L
     val krasNum: Long    = 10L
 
-    val brunoAddress: SigmaProp   = PK("9exfustUCPDKXsfDrGNrmtkyLDwAie2rKKdUsPVa26RuBFaYeCL") // revert back to original address
+    val brunoAddress: SigmaProp   = PK("9exfustUCPDKXsfDrGNrmtkyLDwAie2rKKdUsPVa26RuBFaYeCL")
     val pulsarzAddress: SigmaProp = PK("9hHondX3uZMY2wQsXuCGjbgZUqunQyZCNNuwGu6rL7AJC8dhRGa")
     val phoenixAddress: SigmaProp = PK("9iPs1ujGj2eKXVg82aGyAtUtQZQWxFaki48KFixoaNmUAoTY6wV")
     val kushtiAddress: SigmaProp  = PK("9iE2MadGSrn1ivHmRZJWRxzHffuAk6bPmEv6uJmPHuadBY8td5u")
-    val krasAddress: SigmaProp    = PK("9i9RhfdHQA2bHA8GqWKkYevp3nozASRjJfFkh29utjNL9gqE7Q7")
+    val krasAddress: SigmaProp    = PK("9g8QaPWTnx71tDdqgzdqZVdNg1cKgEHhAhjCvFqV7ggxRVwycCg")
 
     // ===== Fee Distribution Tx ===== //
     val validFeeDistributionTx: Boolean = {
