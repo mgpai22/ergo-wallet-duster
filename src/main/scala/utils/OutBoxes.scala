@@ -202,6 +202,7 @@ class OutBoxes(ctx: BlockchainContext) {
       hodlToken: ErgoToken,
       minBoxValue: Long,
       minerFee: Long,
+      txOperatorFee: Long,
       amount: Long = minAmount
   ): OutBox = {
     this.txBuilder
@@ -212,7 +213,8 @@ class OutBoxes(ctx: BlockchainContext) {
         ErgoValue.of(bankSingleton.getId.getBytes),
         ErgoValue.of(hodlToken.getId.getBytes),
         ErgoValue.of(minBoxValue),
-        ErgoValue.of(minerFee)
+        ErgoValue.of(minerFee),
+        ErgoValue.of(txOperatorFee)
       )
       .contract(proxyContract)
       .build()
@@ -225,6 +227,7 @@ class OutBoxes(ctx: BlockchainContext) {
       hodlToken: ErgoToken,
       minBoxValue: Long,
       minerFee: Long,
+      txOperatorFee: Long,
       amount: Long = minAmount
   ): OutBox = {
     this.txBuilder
@@ -236,7 +239,8 @@ class OutBoxes(ctx: BlockchainContext) {
         ErgoValue.of(bankSingleton.getId.getBytes),
         ErgoValue.of(hodlToken.getId.getBytes),
         ErgoValue.of(minBoxValue),
-        ErgoValue.of(minerFee)
+        ErgoValue.of(minerFee),
+        ErgoValue.of(txOperatorFee)
       )
       .contract(proxyContract)
       .build()

@@ -54,6 +54,7 @@ object sendToProxyMint extends App {
     new ErgoToken(contractConf.Contracts.bankContract.hodlCoin, 1L),
     minBoxValue,
     minerFee,
+    minTxOperatorFee,
     Parameters.OneErg + minBoxValue + minerFee + minTxOperatorFee
   )
 
@@ -122,6 +123,7 @@ object sendToProxyMultiMint extends App {
       new ErgoToken(contractConf.Contracts.bankContract.hodlCoin, 1L),
       minBoxValue,
       minerFee,
+      minTxOperatorFee,
       totalAmountPerTx
     )
 
@@ -187,6 +189,7 @@ object sendToProxyBurn extends App {
     hodlToken,
     minBoxValue,
     minerFee,
+    minTxOperatorFee,
     minBoxValue + totalFees
   )
 
@@ -263,6 +266,7 @@ object sendToProxyMultiBurn extends App {
       ),
       minBoxValue,
       minerFee,
+      minTxOperatorFee,
       totalFeesPerTx
     )
 

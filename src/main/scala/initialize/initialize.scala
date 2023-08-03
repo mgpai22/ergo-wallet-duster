@@ -62,8 +62,8 @@ object initialize extends App {
 
   val singleton = outBoxObj.tokenHelper(
     genesisInput.head,
-    "phoenixHodlBankSingleton",
-    "Phoenix Hodl Bank Identification Token",
+    "Phoenix hodlERG3 Bank Singleton",
+    "Phoenix hodlERG3 bank identification token",
     1L,
     0
   )

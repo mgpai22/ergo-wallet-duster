@@ -130,8 +130,10 @@ class akkaFunctions {
         val minerFee =
           proxyInput.getRegisters.get(4).getValue.asInstanceOf[Long]
 
+        val txOperatorFee = proxyInput.getRegisters.get(5).getValue.asInstanceOf[Long]
+
         val ergMintAmount =
-          proxyInput.getValue - minBoxValue - minerFee - serviceConf.minTxOperatorFee
+          proxyInput.getValue - minBoxValue - minerFee - txOperatorFee
 
         val hodlMintAmount =
           hodlMintAmountFromERG(currentBankInput, ergMintAmount)
@@ -346,7 +348,8 @@ class akkaFunctions {
         validateBox(
           box,
           serviceConf.minBoxValue,
-          serviceConf.minMinerFee
+          serviceConf.minMinerFee,
+          serviceConf.minTxOperatorFee
         )
       )
       .map(boxAPIObj.convertJsonBoxToInputBox)
@@ -420,13 +423,15 @@ class akkaFunctions {
   def validateBox(
       box: BoxJson,
       minBoxValue: Long,
-      minerFee: Long
+      minerFee: Long,
+      minTxOperatorFee: Long
   ): Boolean = {
     box.additionalRegisters.R4 != null &&
     box.additionalRegisters.R5.serializedValue != null &&
     box.additionalRegisters.R6.serializedValue != null &&
     box.additionalRegisters.R7.renderedValue.toLong >= minBoxValue &&
-    box.additionalRegisters.R8.renderedValue.toLong >= minerFee
+    box.additionalRegisters.R8.renderedValue.toLong >= minerFee &&
+      box.additionalRegisters.R9.renderedValue.toLong >= minTxOperatorFee
   }
 
 }

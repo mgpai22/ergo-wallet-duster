@@ -15,6 +15,7 @@
     // R6: Coll[Byte]   HodlCoinTokenId
     // R7: Long         MinBoxValue
     // R8: Long         MinerFee
+    // R9: Long         TxOperatorFee
 
     // ===== Relevant Transactions ===== //
     // 1. Mint Tx
@@ -45,6 +46,7 @@
     val hodlCoinTokenId: Coll[Byte]             = SELF.R6[Coll[Byte]].get
     val minBoxValue: Long                       = SELF.R7[Long].get
     val minerFee: Long                          = SELF.R8[Long].get
+    val txOperatorFee: Long                     = SELF.R9[Long].get
     val minerFeeErgoTreeBytesHash: Coll[Byte]   = fromBase16("e540cceffd3b8dd0f401193576cc413467039695969427df94454193dddfb375")
     val isValidBank: Boolean                    = (INPUTS(0).tokens.size > 1 && INPUTS(0).tokens(0)._1 == bankSingletonTokenId) && (INPUTS(0).tokens(1)._1 == hodlCoinTokenId)
 
@@ -85,7 +87,7 @@
 
             val expectedAmountDeposited: Long = (hodlCoinsCircDelta * price) / precisionFactor
 
-            val validProxyValue: Boolean = (SELF.value - minBoxValue - minerFee - $minTxOperatorFee >= expectedAmountDeposited)
+            val validProxyValue: Boolean = (SELF.value - minBoxValue - minerFee - txOperatorFee >= expectedAmountDeposited)
 
             val validBuyerBoxOUT: Boolean = {
 
@@ -110,7 +112,14 @@
 
         }
 
-            val validTxOperatorFee: Boolean = (txOperatorFeeBoxOUT.value >= $minTxOperatorFee)
+            val validTxOperatorFee: Boolean = {
+
+                allOf(Coll(
+                    (txOperatorFee >= $minTxOperatorFee),
+                        (txOperatorFeeBoxOUT.value == txOperatorFee)
+                ))
+
+        }
 
             val validOutputSize: Boolean = (OUTPUTS.size == 4)
 
@@ -165,7 +174,14 @@
 
         }
 
-            val validTxOperatorFee: Boolean = (txOperatorFeeBoxOUT.value >= $minTxOperatorFee)
+            val validTxOperatorFee: Boolean = {
+
+                allOf(Coll(
+                    (txOperatorFee >= $minTxOperatorFee),
+                        (txOperatorFeeBoxOUT.value == txOperatorFee)
+                ))
+
+        }
 
             val validOutputSize: Boolean = (OUTPUTS.size == 5)
 

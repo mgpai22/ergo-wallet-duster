@@ -63,6 +63,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -140,6 +141,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -222,6 +224,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -296,6 +299,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        generousTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + generousTxOperatorFee // <-- this is changed
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -374,6 +378,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         generousMinerFee, // <-- this is changed
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + generousMinerFee + minTxOperatorFee // <-- this is changed
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -440,6 +445,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -510,6 +516,7 @@ class ProxySpec
         new ErgoToken(hodlTokenId, hodlBurnAmount),
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         minerFee + minTxOperatorFee // <-- note that minBoxValue is not needed
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -590,6 +597,7 @@ class ProxySpec
         new ErgoToken(hodlTokenId, hodlBurnAmount),
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         minerFee + minTxOperatorFee // <-- note that minBoxValue is not needed
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -674,6 +682,7 @@ class ProxySpec
         new ErgoToken(hodlTokenId, hodlBurnAmount),
         minBoxValue,
         minerFee,
+        generousTxOperatorFee,
         minerFee + generousTxOperatorFee // <-- note that minBoxValue is not needed
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -752,6 +761,7 @@ class ProxySpec
         new ErgoToken(hodlTokenId, hodlBurnAmount),
         minBoxValue,
         generousMinerFee,
+        minTxOperatorFee,
         generousMinerFee + minTxOperatorFee // <-- this is changed
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -786,9 +796,10 @@ class ProxySpec
   }
 
   "PhoenixBurnOperationWithProxy" should "fail when offchain code sends to an address which does not belong to buyer" in {
-
     val ergAmount = 1000 * 1000000000L
     val hodlErgAmount = 100 * 1000000000L
+
+    val generousMinerFee = 1000000000L
 
     val hodlBurnAmount = 20
 
@@ -817,9 +828,10 @@ class ProxySpec
         userAddress,
         hodlBankSingleton,
         new ErgoToken(hodlTokenId, hodlBurnAmount),
+        minBoxValue,
         minerFee,
-        minerFee,
-        minerFee + minTxOperatorFee
+        minTxOperatorFee,
+        minerFee + minTxOperatorFee // <-- this is changed
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
 
@@ -854,8 +866,8 @@ class ProxySpec
     the[Exception] thrownBy {
       txHelper.signTransaction(unsignedTransaction)
     } should have message "Script reduced to false"
-
   }
+
 
   "ProxyRefund" should "work correctly when all conditions are satisfied" in {
 
@@ -880,6 +892,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -926,6 +939,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -965,6 +979,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -1009,6 +1024,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -1055,6 +1071,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -1067,6 +1084,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         100000L + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId2, fakeIndex)
@@ -1079,6 +1097,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         10041514300L + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId3, fakeIndex)
@@ -1125,6 +1144,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -1137,6 +1157,7 @@ class ProxySpec
         new ErgoToken(hodlTokenId, 47L),
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         100000L + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId2, fakeIndex)
@@ -1149,6 +1170,7 @@ class ProxySpec
         new ErgoToken(hodlTokenId, 52438924L),
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         10041514300L + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId3, fakeIndex)
@@ -1201,6 +1223,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -1213,6 +1236,7 @@ class ProxySpec
         new ErgoToken(hodlTokenId, 47L),
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         100000L + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId2, fakeIndex)
@@ -1225,6 +1249,7 @@ class ProxySpec
         new ErgoToken(hodlTokenId, 52438924L),
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         10041514300L + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId3, fakeIndex)
@@ -1281,6 +1306,7 @@ class ProxySpec
         dummyHodlTokens,
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         ergMintAmount + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId1, fakeIndex)
@@ -1293,6 +1319,7 @@ class ProxySpec
         new ErgoToken(hodlTokenId, 47L),
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         100000L + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId2, fakeIndex)
@@ -1305,6 +1332,7 @@ class ProxySpec
         new ErgoToken(dexyUSD, 52438924L),
         minBoxValue,
         minerFee,
+        minTxOperatorFee,
         10041514300L + minBoxValue + minerFee + minTxOperatorFee
       )
       .convertToInputWith(fakeTxId3, fakeIndex)
