@@ -81,48 +81,48 @@
 
                 // Outputs
                 val minerFeeBoxOUT: Box = OUTPUTS(2)
-                val txOperatorFeeBoxOUT: Box = OUTPUTS(3)
+            val txOperatorFeeBoxOUT: Box = OUTPUTS(3)
 
-                val expectedAmountDeposited: Long = (hodlCoinsCircDelta * price) / precisionFactor
+            val expectedAmountDeposited: Long = (hodlCoinsCircDelta * price) / precisionFactor
 
-                val validProxyValue: Boolean = (SELF.value - minBoxValue - minerFee - $minTxOperatorFee >= expectedAmountDeposited)
+            val validProxyValue: Boolean = (SELF.value - minBoxValue - minerFee - $minTxOperatorFee >= expectedAmountDeposited)
 
-                val validBuyerBoxOUT: Boolean = {
+            val validBuyerBoxOUT: Boolean = {
 
-                    val validValue: Boolean = (buyerPKBoxOUT.value == minBoxValue)
-                    val validContract: Boolean = (buyerPKBoxOUT.propositionBytes == buyerPK.propBytes)
-                    val validHodlCoinTransfer: Boolean = (buyerPKBoxOUT.tokens(0) == (bankBoxOUT.tokens(1)._1, hodlCoinsCircDelta))
+                val validValue: Boolean = (buyerPKBoxOUT.value == minBoxValue)
+            val validContract: Boolean = (buyerPKBoxOUT.propositionBytes == buyerPK.propBytes)
+            val validHodlCoinTransfer: Boolean = (buyerPKBoxOUT.tokens(0) == (bankBoxOUT.tokens(1)._1, hodlCoinsCircDelta))
 
-                    allOf(Coll(
-                        validValue,
-                        validContract,
-                        validHodlCoinTransfer
-                    ))
+            allOf(Coll(
+                validValue,
+                validContract,
+                validHodlCoinTransfer
+            ))
 
-                }
+        }
 
-                val validMinerFee: Boolean = {
-
-                    allOf(Coll(
-                        (minerFeeBoxOUT.value == minerFee),
-                        (blake2b256(minerFeeBoxOUT.propositionBytes) == minerFeeErgoTreeBytesHash)
-                    ))
-
-                }
-
-                val validTxOperatorFee: Boolean = (txOperatorFeeBoxOUT.value >= $minTxOperatorFee)
-
-                val validOutputSize: Boolean = (OUTPUTS.size == 4)
+            val validMinerFee: Boolean = {
 
                 allOf(Coll(
-                    validProxyValue,
-                    validBuyerBoxOUT,
-                    validMinerFee,
-                    validTxOperatorFee,
-                    validOutputSize
+                    (minerFeeBoxOUT.value == minerFee),
+                        (blake2b256(minerFeeBoxOUT.propositionBytes) == minerFeeErgoTreeBytesHash)
                 ))
 
-            }
+        }
+
+            val validTxOperatorFee: Boolean = (txOperatorFeeBoxOUT.value >= $minTxOperatorFee)
+
+            val validOutputSize: Boolean = (OUTPUTS.size == 4)
+
+            allOf(Coll(
+                validProxyValue,
+                validBuyerBoxOUT,
+                validMinerFee,
+                validTxOperatorFee,
+                validOutputSize
+            ))
+
+        }
 
             sigmaProp(validMintTx)
 
@@ -133,51 +133,51 @@
 
                 // Outputs
                 val phoenixFeeBoxOUT: Box = OUTPUTS(2)
-                val minerFeeBoxOUT: Box = OUTPUTS(3)
-                val txOperatorFeeBoxOUT: Box = OUTPUTS(4)
+            val minerFeeBoxOUT: Box = OUTPUTS(3)
+            val txOperatorFeeBoxOUT: Box = OUTPUTS(4)
 
-                val hodlCoinsBurned: Long = hodlCoinsOut - hodlCoinsIn
-                val expectedAmountBeforeFees: Long = (hodlCoinsBurned * price) / precisionFactor
-                val bankFeeAmount: Long = (expectedAmountBeforeFees * bankFeeNum) / feeDenom
-                val devFeeAmount: Long = (expectedAmountBeforeFees * devFeeNum) / feeDenom
-                val expectedAmountWithdrawn: Long = expectedAmountBeforeFees - bankFeeAmount - devFeeAmount
+            val hodlCoinsBurned: Long = hodlCoinsOut - hodlCoinsIn
+            val expectedAmountBeforeFees: Long = (hodlCoinsBurned * price) / precisionFactor
+            val bankFeeAmount: Long = (expectedAmountBeforeFees * bankFeeNum) / feeDenom
+            val devFeeAmount: Long = (expectedAmountBeforeFees * devFeeNum) / feeDenom
+            val expectedAmountWithdrawn: Long = expectedAmountBeforeFees - bankFeeAmount - devFeeAmount
 
-                val validBurn: Boolean = (bankBoxOUT.tokens(1)._2 == bankBoxIN.tokens(1)._2 + SELF.tokens(0)._2)
+            val validBurn: Boolean = (bankBoxOUT.tokens(1)._2 == bankBoxIN.tokens(1)._2 + SELF.tokens(0)._2)
 
-                val validBuyerBoxOUT: Boolean = {
+            val validBuyerBoxOUT: Boolean = {
 
-                    val validERGTransfer: Boolean = (buyerPKBoxOUT.value == expectedAmountWithdrawn)
-                    val validContract: Boolean = (buyerPKBoxOUT.propositionBytes == buyerPK.propBytes)
+                val validERGTransfer: Boolean = (buyerPKBoxOUT.value == expectedAmountWithdrawn)
+            val validContract: Boolean = (buyerPKBoxOUT.propositionBytes == buyerPK.propBytes)
 
-                    allOf(Coll(
-                        validERGTransfer,
-                        validContract
-                    ))
+            allOf(Coll(
+                validERGTransfer,
+                validContract
+            ))
 
-                }
+        }
 
-                val validMinerFee: Boolean = {
-
-                    allOf(Coll(
-                        (minerFeeBoxOUT.value == minerFee),
-                        (blake2b256(minerFeeBoxOUT.propositionBytes) == minerFeeErgoTreeBytesHash)
-                    ))
-
-                }
-
-                val validTxOperatorFee: Boolean = (txOperatorFeeBoxOUT.value >= $minTxOperatorFee)
-
-                val validOutputSize: Boolean = (OUTPUTS.size == 5)
+            val validMinerFee: Boolean = {
 
                 allOf(Coll(
-                    validBurn,
-                    validBuyerBoxOUT,
-                    validMinerFee,
-                    validTxOperatorFee,
-                    validOutputSize
+                    (minerFeeBoxOUT.value == minerFee),
+                        (blake2b256(minerFeeBoxOUT.propositionBytes) == minerFeeErgoTreeBytesHash)
                 ))
 
-            }
+        }
+
+            val validTxOperatorFee: Boolean = (txOperatorFeeBoxOUT.value >= $minTxOperatorFee)
+
+            val validOutputSize: Boolean = (OUTPUTS.size == 5)
+
+            allOf(Coll(
+                validBurn,
+                validBuyerBoxOUT,
+                validMinerFee,
+                validTxOperatorFee,
+                validOutputSize
+            ))
+
+        }
 
             sigmaProp(validBurnTx)
 
@@ -188,36 +188,34 @@
         // ===== Refund Tx ===== //
         val validRefundTx: Boolean = {
 
-            val recommendedMinerFee: Long = 1000000L // overrides buyer's miner fee choice since they could go too low or too high
-
-            //ensures buyer receives total value of box
-            val validValueTransfer: Boolean = OUTPUTS.map { (o: Box) =>
-                if (o.propositionBytes == buyerPK.propBytes) o.value else 0L
-            }.fold(0L, { (a: Long, b: Long) => a + b }) >= SELF.value
-
-            // if box has tokens it must go to buyer
-            val validTokenTransfer: Boolean = {
-                if(SELF.tokens.size > 0){
-                    OUTPUTS.exists { (o: Box) =>
-                        (o.tokens == SELF.tokens) && (o.propositionBytes == buyerPK.propBytes)
-                    }
-                } else{
-                  true
-                }
-            }
-
             val validBuyerBoxOUT: Boolean = {
 
-                allOf(Coll(
-                    validValueTransfer,
-                    validTokenTransfer
-                ))
+            // Ensure that the buyer receives the total value of box.
+            val validValueTransfer: Boolean = OUTPUTS.map { (o: Box) =>
+            if (o.propositionBytes == buyerPK.propBytes) o.value else 0L
+        }.fold(0L, { (a: Long, b: Long) => a + b }) >= SELF.value
 
+        // If the box has tokens in it, all must go to buyer.
+        val validTokenTransfer: Boolean = {
+        if(SELF.tokens.size > 0){
+            OUTPUTS.exists { (o: Box) =>
+                (o.tokens == SELF.tokens) && (o.propositionBytes == buyerPK.propBytes)
             }
-
-            validBuyerBoxOUT
-
+        } else{
+            true
         }
+    }
+
+        allOf(Coll(
+            validValueTransfer,
+            validTokenTransfer
+        ))
+
+    }
+
+        validBuyerBoxOUT
+
+    }
 
         sigmaProp(validRefundTx) && buyerPK
 
