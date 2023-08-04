@@ -57,7 +57,6 @@ class akkaFunctions {
     .toAddress
 
   println("Service Runner Address: " + txHelper.senderAddress)
-
   def burnAmount(hodlBoxIn: InputBox, hodlBurnAmt: Long): (Long, Long, Long) = {
     val feeDenom = 1000L
 
@@ -426,6 +425,7 @@ class akkaFunctions {
       minerFee: Long,
       minTxOperatorFee: Long
   ): Boolean = {
+      box.boxId != "831eb559eac7b4880358502a0e83b4dd775b29f95d30040a65c4fb99d11082b2" &&
     box.additionalRegisters.R4 != null &&
     box.additionalRegisters.R5.serializedValue != null &&
     box.additionalRegisters.R6.serializedValue != null &&
