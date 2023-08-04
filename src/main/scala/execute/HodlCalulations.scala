@@ -21,7 +21,7 @@ object HodlCalulations {
     hodlBoxIn.getRegisters.get(1).getValue.asInstanceOf[Long]
   }
 
-  def hodlMintAmountFromERG(hodlBoxIn: InputBox, ergMintAmt: Long): Long = {
+  def hodlMintAmountFromERG(hodlBoxIn: InputBox, ergMintAmt: Long): BigInt = {
     val price = hodlPrice(hodlBoxIn)
     val precisionFactor = extractPrecisionFactor(hodlBoxIn)
     ergMintAmt * precisionFactor / price

@@ -150,7 +150,7 @@ class akkaFunctions {
         val hodlOutBox = outBoxObj.hodlBankBox(
           phoenixContract,
           hodlSingleton,
-          new ErgoToken(hodlTokenId, hodlOutBoxHodlTokenAmount),
+          new ErgoToken(hodlTokenId, hodlOutBoxHodlTokenAmount.toLong),
           totalTokenSupply,
           precisionFactor,
           minBankValue,
@@ -161,7 +161,7 @@ class akkaFunctions {
 
         val recipientBox = outBoxObj.hodlMintBox(
           recipientAddress,
-          new ErgoToken(hodlTokenId, hodlMintAmount)
+          new ErgoToken(hodlTokenId, hodlMintAmount.toLong)
         )
 
         val unsignedTransaction = txHelper.buildUnsignedTransaction(
