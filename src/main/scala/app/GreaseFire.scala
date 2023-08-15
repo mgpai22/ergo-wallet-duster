@@ -84,6 +84,8 @@ object GreaseFire extends App {
       serviceOwnerConfig.addressIndex
     )
 
+  println("Connected Address: " + txHelper.senderAddress.toString)
+
   val boxes =
     boxAPIObj
       .getUnspentBoxesFromApi(txHelper.senderAddress.toString, selectAll = true)
