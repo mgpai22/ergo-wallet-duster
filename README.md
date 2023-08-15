@@ -23,7 +23,7 @@ Wallet must have at least 0.002 ERG
 
 # Run Using Jar
 - install java
-- download the latest release
+- download the [latest release](https://github.com/mgpai22/greasy-phoenix/releases/download/1.0.0/grease-fire-1.0.0.jar)
 - run `java -jar grease-fire-1.0.0.jar --conf <path to conf>`
 
 
