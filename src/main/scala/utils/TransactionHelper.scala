@@ -14,7 +14,8 @@ import org.ergoplatform.sdk.{ErgoToken, SecretString}
 class TransactionHelper(
     ctx: BlockchainContext,
     walletMnemonic: String,
-    mnemonicPassword: String = ""
+    mnemonicPassword: String = "",
+    proverIndex: Int = 0
 ) {
   private val mnemonic = Mnemonic.create(
     SecretString.create(walletMnemonic),
@@ -23,7 +24,7 @@ class TransactionHelper(
   private val txBuilder = this.ctx.newTxBuilder()
 
   val senderAddress: Address = Address.createEip3Address(
-    0,
+    proverIndex,
     ctx.getNetworkType,
     SecretString.create(walletMnemonic),
     SecretString.create(mnemonicPassword),
@@ -54,7 +55,7 @@ class TransactionHelper(
 
   def signTransaction(
       unsignedTransaction: UnsignedTransaction,
-      proverIndex: Int = 0
+      proverIndex: Int = proverIndex
   ): SignedTransaction = {
     val prover = this.ctx
       .newProverBuilder()

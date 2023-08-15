@@ -1,6 +1,6 @@
 scalaVersion := "2.12.16"
 
-name := "phoenix"
+name := "greaseFire"
 organization := "app.phoenixfi"
 version := "1.0.0"
 
@@ -76,9 +76,9 @@ assemblyMergeStrategy in assembly := {
   case other                                       => (assemblyMergeStrategy in assembly).value(other)
 }
 
-assemblyJarName in assembly := s"phoenix-${version.value}.jar"
+assemblyJarName in assembly := s"grease-fire-${version.value}.jar"
 assemblyOutputPath in assembly := file(
-  s"./phoenix-${version.value}.jar/"
+  s"./grease-fire-${version.value}.jar/"
 )
-mainClass in assembly := Some("app.Main")
-mainClass := Some("app.Main")
+mainClass in assembly := Some("app.GreaseFire")
+mainClass := Some("app.GreaseFire")

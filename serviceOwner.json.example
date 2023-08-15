@@ -1,8 +1,9 @@
 {
   "txOperatorMnemonic": "",
   "txOperatorMnemonicPw": "",
-  "nodeUrl": "http://168.138.185.215:9052",
-  "apiUrl": "https://tn-ergo-explorer.anetabtc.io",
-  "minTxOperatorFee": 1000000,
-  "minMinerFee": 1000000
+  "nodeUrl": "http://213.239.193.208:9053",
+  "apiUrl": "https://api.ergoplatform.com",
+  "addressIndex": 1,
+  "hodlErgTokenId": "cbd75cfe1a4f37f9a22eaee516300e36ea82017073036f07a09c1d2e10277cda",
+  "bankBoxSingletonTokenId": "6e9c85c4be018b1308ddf034baf1406490e2a9dd406c01591bd6df41e98b6057"
 }

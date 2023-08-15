@@ -1,35 +1,20 @@
 package utils
 
 import com.google.common.graph.ElementOrder.Type
-import com.google.gson.{
-  Gson,
-  GsonBuilder,
-  JsonDeserializationContext,
-  JsonDeserializer,
-  JsonElement
-}
-import com.google.gson.reflect.TypeToken
-import configs.{AvlJson, serviceOwnerConf}
+import com.google.gson.GsonBuilder
+
 import org.apache.http.HttpHeaders
 import org.apache.http.client.methods.{HttpGet, HttpPost}
-import org.apache.http.entity.{ContentType, StringEntity}
+import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
-import org.ergoplatform.ErgoBox
 import org.ergoplatform.appkit.InputBox
-import org.ergoplatform.appkit.impl.{InputBoxImpl, ScalaBridge}
-import org.ergoplatform.explorer.client.model.OutputInfo
+import org.ergoplatform.appkit.impl.InputBoxImpl
 import org.ergoplatform.restapi.client.{Asset, ErgoTransactionOutput, Registers}
 
 import scala.collection.JavaConverters._
-import java.util.ArrayList
-import scala.collection.mutable.ListBuffer
+
 import scala.util.Try
-import scala.collection.mutable.ArrayBuffer
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, Future, Promise}
-import scala.util.{Failure, Success}
 
 case class RawResponse(
     items: Array[BoxJson],

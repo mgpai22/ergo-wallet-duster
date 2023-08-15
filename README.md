@@ -1,23 +1,43 @@
-# Ergo Off-Chain Bot Template
+# Grease Fire Phoenix HODLERG3
 
-This is a template that can be cloned to implement your off-chain ergo transaction logic!
+Continuously mints ERG for hodlERG3 and burns hodlERG3 for ERG using chained transactions.
+
+Wallet must have at least 0.002 ERG
+- 0.001 ERG for miner fee
+- 0.001 ERG for token box
 
 
-# Included Packages
-- Ergo Appkit
-- GetBlok Plasma
-- Exle Edge
-- Akka
-- Apache Http
-- Gson Json Serialization
+# Setup
+- Before running make sure to copy `serviceOwner.json.example` to `serviceOwner.json` and fill in the values
+- Defaults are setup, only thing needed is mnemonic
+- mnemonic password can be left blank, only needed if mnemonic is encrypted (most of the times it is not)
+- addressIndex can be left to `0`, if you have multiple addresses in your wallet you can change this to the index of the address you want to use
 
-# Usage
-- Add contracts in src/main/scala/resources
-- Add boxes in src/main/scala/utils/Outboxes or /InputBoxes
-- Add api calls in src/main/scala/utils/explorerApi
-- Build complete transactions in src/main/scala/execute/TxBuildUtility
-- Write code which will be driven by akka in src/main/scala/execute/akkaFunctions
-- Start and configure akka in src/main/scala/app/Main
-- Run modules/test code in src/test/scala/main
-- Add node and mnemonic information in serviceOwner.json
-- If you want to add more items in the serviceOwner.json make sure to add to the ServiceOwnerConfig case class in  src/main/scala/configs/conf
+
+
+# Run Using Scala
+
+- install [scala](https://www.scala-lang.org/download/)
+- install [sbt](https://www.scala-sbt.org/download.html)
+- run `sbt "runMain app.GreaseFire"` in the root directory of this project
+
+# Run Using Jar
+- install java
+- download the latest release
+- run `java -jar grease-fire-1.0.0.jar --conf <path to conf>`
+
+
+- `--dryrun` flag can be used to test the transaction without submitting it to the network
+  - For example:
+    ```java
+        java -jar grease-fire-1.0.0.jar --conf <path to conf> --dryrun
+    ```
+    
+
+# Build Jar
+- make sure scala and sbt are installed
+- run `sbt clean assembly` in the root directory of this project
+- jar will be in root directory of this project
+
+# Notes
+- root directory means the directory where `README.md` file is located
