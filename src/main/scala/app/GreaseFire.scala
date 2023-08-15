@@ -126,4 +126,6 @@ object GreaseFire extends App {
     case e: Exception => println("error executing txns: " + e); sys.exit(1)
   }
 
+  sys.exit(1)
+
 }
