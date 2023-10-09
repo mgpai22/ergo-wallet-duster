@@ -1,10 +1,10 @@
 scalaVersion := "2.12.16"
 
-name := "greaseFire"
+name := "Duster"
 organization := "app.phoenixfi"
-version := "1.0.1"
+version := "1.0.0"
 
-ThisBuild / version := "1.0.1"
+ThisBuild / version := "1.0.0"
 
 // Note, it's not required for you to define these three settings. These are
 // mostly only necessary if you intend to publish your library's binaries on a
@@ -76,9 +76,9 @@ assemblyMergeStrategy in assembly := {
   case other                                       => (assemblyMergeStrategy in assembly).value(other)
 }
 
-assemblyJarName in assembly := s"grease-fire-${version.value}.jar"
+assemblyJarName in assembly := s"duster-${version.value}.jar"
 assemblyOutputPath in assembly := file(
-  s"./grease-fire-${version.value}.jar/"
+  s"./duster-${version.value}.jar/"
 )
-mainClass in assembly := Some("app.GreaseFire")
-mainClass := Some("app.GreaseFire")
+mainClass in assembly := Some("app.Duster")
+mainClass := Some("app.Duster")
