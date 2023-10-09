@@ -1,10 +1,6 @@
-# Grease Fire Phoenix HODLERG3
+# Wallet Duster
 
-Continuously mints ERG for hodlERG3 and burns hodlERG3 for ERG using chained transactions.
-
-Wallet must have at least 0.002 ERG
-- 0.001 ERG for miner fee
-- 0.001 ERG for token box
+Dusts wallet in one transaction
 
 
 # Setup
@@ -19,18 +15,18 @@ Wallet must have at least 0.002 ERG
 
 - install [scala](https://www.scala-lang.org/download/)
 - install [sbt](https://www.scala-sbt.org/download.html)
-- run `sbt "runMain app.GreaseFire"` in the root directory of this project
+- run `sbt "runMain app.Duster"` in the root directory of this project
 
 # Run Using Jar
 - install java
 - download the [latest release](https://github.com/mgpai22/greasy-phoenix/releases/latest)
-- run `java -jar grease-fire-1.0.0.jar --conf <path to conf>`
+- run `java -jar duster-1.0.0.jar --conf <path to conf>`
 
 
 - `--dryrun` flag can be used to test the transaction without submitting it to the network
   - For example:
     ```java
-        java -jar grease-fire-1.0.0.jar --conf <path to conf> --dryrun
+        java -jar duster-1.0.0.jar --conf <path to conf> --dryrun
     ```
     
 
