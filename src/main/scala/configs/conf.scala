@@ -7,11 +7,13 @@ import scala.io.Source
 case class ServiceOwnerConfig(
     txOperatorMnemonic: String,
     txOperatorMnemonicPw: String,
+    recipient: String,
+    amountNanoERGPerBox: Long,
+    amountBoxes: Int,
+    txFeeNanoERG: Long,
     nodeUrl: String,
     apiUrl: String,
-    addressIndex: Int,
-    hodlErgTokenId: String,
-    bankBoxSingletonTokenId: String
+    addressIndex: Int
 )
 
 object serviceOwnerConf {
