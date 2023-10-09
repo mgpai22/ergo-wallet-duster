@@ -35,3 +35,4 @@ project/metals.sbt
 .vscode
 serviceOwner.json
 contracts.json
+duster-*.jar
